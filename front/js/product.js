@@ -11,7 +11,9 @@ const productId = urlQuery.slice(4)
 
 let productData,
 productQuantity = 0,
-productColor = "";
+productColor = "",
+cart = [],
+articles = {};
 
 fetch('http://localhost:3000/api/products/' + productId)
 .then(res => res.json())
@@ -56,9 +58,43 @@ const verifyIsNotEmpty = () => {
     } else if (productQuantity === 0) {
         alert("Veuillez choisir une quantité");  
     } else {
-        
+        articles = {
+            id: productId,
+            qty: productQuantity,
+            color: productColor
+            }
+        verifyIsExist();
     }
 }
+
+const verifyIsExist = () => {
+    for (let i = 0; i < cart.length;i++) {
+        if (cart[i].id === articles.id) {
+            if (cart[i].color === articles.color) {
+                let sum = cart[i].qty + articles.qty;
+                cart[i].qty = sum;
+                if (cart[i].qty > 100) {
+                    cart[i].qty = 100;
+                }
+                return addToCart();
+            } 
+        }
+    }
+    cart.push(articles);
+    addToCart();
+}
+
+const addToCart = () => {
+    window.localStorage.setItem("localCart", JSON.stringify(cart));
+}
+
+const getCartStorage = () => {
+    if (window.localStorage.getItem("localCart")) {
+       cart = JSON.parse(localStorage.getItem("localCart"));
+    } 
+}
+
+getCartStorage();
 
 productQuantityInput.addEventListener("input", e => {
     selectQuantity(e.target.value)
