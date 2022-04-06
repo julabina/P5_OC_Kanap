@@ -1,11 +1,17 @@
 const cartItemsContainer = document.getElementById("cart__items");
 const totalQty = document.getElementById("totalQuantity");
 const totalPrice = document.getElementById("totalPrice");
-
+const inputFirstName = document.getElementById("firstName");
+const inputLastName = document.getElementById("lastName");
+const inputAddress = document.getElementById("address");
+const inputCity = document.getElementById("city");
+const inputEmail = document.getElementById("email");
+const submitBtn = document.getElementById("order");
 
 let cart = [],
 cartInfos = [],
-productsDatas= [];
+productsDatas= [],
+firstName, lastName,address, city, email;
 
 fetch('http://localhost:3000/api/products/')
 .then(res => res.json())
@@ -89,6 +95,7 @@ const calculTotal = () => {
 const displayTotal = (total, qty) => {
   totalQty.textContent = qty;
   totalPrice.textContent = total;
+  setCartStorage();
 }
 
 
@@ -100,11 +107,9 @@ const changeQty = (value, id, color) => {
     newQty = 0;
   }
   if(qtyInt > 100) {
-      productQuantityInput.value = 100;
       newQty = 100;
   } else if (qtyInt < 0) {
-      productQuantityInput.value = 0;
-      newQty = 0;
+      newQty = 1;
   }
 
   for(let i = 0; i < cart.length; i++) {
@@ -123,33 +128,25 @@ const changeQty = (value, id, color) => {
       newArr.push(cart[i]);
     }
   }
-  
+
   cart = newArr;
 
   displayCart();
 }
 
-/*const selectQuantity = (qty) => {
-   let qtyInt = parseInt(qty);
-  let qtyToAdd = Math.round(qtyInt);
-  if (isNaN(qtyToAdd)) {
-      qtyToAdd = 0;
-  }
-  if(qtyInt > 100) {
-      productQuantityInput.value = 100;
-      qtyToAdd = 100;
-  } else if (qtyInt < 0) {
-      productQuantityInput.value = 0;
-      qtyToAdd = 0;
-  }
-  productQuantity = qtyToAdd; 
-}*/
+const deleteArticle = () => {
+
+}
 
 const getCartStorage = () => {
     if (window.localStorage.getItem("localCart")) {
        cart = JSON.parse(localStorage.getItem("localCart"));
     } 
     displayCart();
+}
+
+const setCartStorage = () => {
+  window.localStorage.setItem("localCart", JSON.stringify(cart));
 }
 
 const addListenner = () => {
@@ -162,3 +159,114 @@ const addListenner = () => {
     })
   })
 }
+
+const postOrder = () => {
+
+  resetFormInputs();
+  /* resetCart(); */
+}
+
+const resetFormInputs = () => {
+  inputFirstName.value = "";
+  inputLastName.value = "";
+  inputAddress.value = "";
+  inputCity.value = "";
+  inputEmail.value = "";  
+}
+
+const resetCart = () => {
+  cart = [];
+  displayCart();
+}
+
+////////////////
+// FORMULAIRE //
+////////////////
+
+
+const displayError = (tag, message) => {
+  const span = document.getElementById(tag + 'ErrorMsg');
+  
+  span.textContent = message;
+}
+
+const firstNameCheck = (val) => {
+    firstName = undefined;
+    if (val.length > 0 && (val.length < 2 || val.length > 25)) {
+      displayError("firstName", "Le prénom doit être compris entre 2 et 25 caractère");
+    } else if (!val.match(/^[a-zA-Zé èà]*$/)) {
+      displayError("firstName", "Le prénom doit contenir uniquement des lettres");
+    } else {
+      displayError("firstName", "");
+      firstName = val;
+    }
+  }
+  
+  const lastNameCheck = (val) => {
+    lastName = undefined;
+    if (val.length > 0 && (val.length < 2 || val.length > 25)) {
+    displayError("lastName", "Le nom doit être compris entre 2 et 25 caractère");  
+  } else if (!val.match(/^[a-zA-Zé èà]*$/)) {
+    displayError("lastName", "Le nom doit contenir uniquement des lettres");
+  } else {
+    displayError("lastName", "");
+    lastName = val;
+  }
+}
+
+const addressCheck = (val) => {
+  address = undefined;
+  if (!val.match(/^[a-zA-Zé èà0-9\s,.'-]{3,}$/)) {
+    displayError("address", "L'adresse n' est pas valide"); 
+  } else {
+    displayError("address", "");
+    address = val;
+  }
+}
+
+const cityCheck = (val) => {
+  city = undefined;
+  if (!val.match(/^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/)) {
+    displayError("city", "Le nom de la ville n'est pas valide");
+  } else {
+    displayError("city", "");
+    city = val;
+  }
+}
+
+const emailCheck = (val) => {
+  email = undefined;
+  if (!val.match(/^[\w_-]+@[\w-]+\.[a-z]{2,4}$/i)) {
+    displayError("email", "L'email n'est pas valide");
+  } else {
+    displayError("email", "");
+    email = val;
+  }
+}
+
+inputFirstName.addEventListener("input", (e) => {
+  firstNameCheck(e.target.value);
+})
+
+inputLastName.addEventListener("input", (e) => {
+  lastNameCheck(e.target.value);
+})
+
+inputAddress.addEventListener("input", (e) => {
+  addressCheck(e.target.value);
+})
+
+inputCity.addEventListener("input", (e) => {
+  cityCheck(e.target.value);
+})
+
+inputEmail.addEventListener("input", (e) => {
+  emailCheck(e.target.value);
+})
+
+submitBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (firstName && lastName && address && city && email) {
+    postOrder();
+  }
+})
