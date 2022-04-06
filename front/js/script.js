@@ -10,8 +10,11 @@ fetch("http://localhost:3000/api/products")
 })
 
 const displayProduct = () => {
+
+    let productList = '';
+
     for (let i = 0; i < productsDatas.length; i++) {
-        itemsContainer.innerHTML += `
+        productList += `
         <a href="./product.html?id=${productsDatas[i]._id}">
         <article>
           <img src="${productsDatas[i].imageUrl}" alt="${productsDatas[i].altTxt}, ${productsDatas[i].name}">
@@ -21,4 +24,6 @@ const displayProduct = () => {
       </a>
         `
     }
+
+    itemsContainer.innerHTML = productList;
 }
