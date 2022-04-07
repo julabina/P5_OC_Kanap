@@ -22,6 +22,7 @@ fetch('http://localhost:3000/api/products/' + productId)
     displayProduct();
 })
 
+// affiche les produits
 const displayProduct = () => {
     productImage.innerHTML += `<img src="${productData.imageUrl}" alt="${productData.altTxt}">`;
     productTitle.textContent = productData.name;
@@ -34,6 +35,7 @@ const displayProduct = () => {
     }
 }
 
+// sélectionne la quantité à ajouter au panier
 const selectQuantity = (qty) => {
     let qtyInt = parseInt(qty);
     let qtyToAdd = Math.round(qtyInt);
@@ -50,6 +52,7 @@ const selectQuantity = (qty) => {
     productQuantity = qtyToAdd;
 }
 
+// verifie que les inputs ne soit pas vides
 const verifyIsNotEmpty = () => {
     if (productQuantity === 0 && productColor === "") {
         alert("Veuillez choisir une couleur et une quantité");
@@ -67,6 +70,7 @@ const verifyIsNotEmpty = () => {
     }
 }
 
+// verifie si l'article existe dans le panier
 const verifyIsExist = () => {
     for (let i = 0; i < cart.length;i++) {
         if (cart[i].id === articles.id) {
@@ -84,10 +88,12 @@ const verifyIsExist = () => {
     addToCart();
 }
 
+// ajoute dans localStorage le contenu du panier
 const addToCart = () => {
     window.localStorage.setItem("localCart", JSON.stringify(cart));
 }
 
+// récupere du localStorage le contenu du panier
 const getCartStorage = () => {
     if (window.localStorage.getItem("localCart")) {
        cart = JSON.parse(localStorage.getItem("localCart"));
@@ -95,6 +101,10 @@ const getCartStorage = () => {
 }
 
 getCartStorage();
+
+        /////////////
+        /// event ///
+        /////////////
 
 productQuantityInput.addEventListener("input", e => {
     selectQuantity(e.target.value)

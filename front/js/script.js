@@ -9,6 +9,7 @@ fetch("http://localhost:3000/api/products")
     displayProduct();
 })
 
+// affiche les produits
 const displayProduct = () => {
 
     let productList = '';

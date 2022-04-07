@@ -20,6 +20,7 @@ fetch('http://localhost:3000/api/products/')
   getCartStorage();
 })
 
+// affiche les élements du panier
 const displayCart = () => {
 
   cartInfos = [];
@@ -77,8 +78,9 @@ const displayCart = () => {
       calculTotal();
       addListenner();
       
-    }
-    
+}
+  
+// calcule le total du panier
 const calculTotal = () => {
       let totalSum = 0, totalArticles = 0;
 
@@ -92,13 +94,14 @@ const calculTotal = () => {
   
 }
 
+// affiche le total du panier
 const displayTotal = (total, qty) => {
   totalQty.textContent = qty;
   totalPrice.textContent = total;
   setCartStorage();
 }
 
-
+// change la quantité d'un article du panier
 const changeQty = (value, id, color) => {
   let qtyInt = parseInt(value);
   let newArr = [];
@@ -134,32 +137,61 @@ const changeQty = (value, id, color) => {
   displayCart();
 }
 
-const deleteArticle = () => {
+// supprime un article
+const deleteArticle = (id, color) => {
+  const filteredSelectedId = cart.filter(el => el.id === id);
+  const filteredWithSelectedColor = filteredSelectedId.filter(el => el.color !== color);
+  const filteredOtherProductsId = cart.filter(el => el.id !== id);
+  
+  let newArr = filteredOtherProductsId;
+  cart = newArr.concat(filteredWithSelectedColor);
+  cart.sort(sortCartID);
 
+  displayCart();
 }
 
+// trie les ids par ordre alphabétique
+const sortCartID = (a, b) => {
+    if (a.id < b.id) {return -1;}
+    if (a.id > b.id) {return 1;}
+    return 0;
+}
+
+// charge le panier depuis localStorage
 const getCartStorage = () => {
     if (window.localStorage.getItem("localCart")) {
        cart = JSON.parse(localStorage.getItem("localCart"));
+       cart.sort(sortCartID);
     } 
     displayCart();
 }
 
+// stock le panier dans localStorage
 const setCartStorage = () => {
   window.localStorage.setItem("localCart", JSON.stringify(cart));
 }
 
+// ajoute des événements aux items créés 
 const addListenner = () => {
   
   const qtyInputs = document.querySelectorAll(".itemQuantity");
+  const deleteButtons = document.querySelectorAll(".deleteItem");
   
   qtyInputs.forEach(input => {
     input.addEventListener("input", (e) => {
       changeQty(e.target.value, e.path[4].dataset.id, e.path[4].dataset.color);
     })
   })
+
+  deleteButtons.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      deleteArticle(e.path[4].dataset.id, e.path[4].dataset.color);
+    })
+  })
+
 }
 
+// envoie la commande au server back
 const postOrder = () => {
 
   let contactContent = {
@@ -200,28 +232,31 @@ const postOrder = () => {
   
 }
 
+// redirige vers la page de confirmation
 const toConfirmationPage = (id) => {
   let url = "/html/confirmation.html?order=" + id;
   
   window.open(url,"_self");
 }
 
+// réinitialise le panier
 const resetCart = () => {
   cart = [];
-  displayCart();
+  setCartStorage();
 }
 
-////////////////
-// FORMULAIRE //
-////////////////
+    ////////////////
+    // FORMULAIRE //
+    ////////////////
 
-
+// affiche les erreurs pour le formulaire
 const displayError = (tag, message) => {
   const span = document.getElementById(tag + 'ErrorMsg');
   
   span.textContent = message;
 }
 
+// verifie le champ prénom
 const firstNameCheck = (val) => {
     firstName = undefined;
     if (val.length > 0 && (val.length < 2 || val.length > 25)) {
@@ -233,8 +268,9 @@ const firstNameCheck = (val) => {
       firstName = val;
     }
   }
-  
-  const lastNameCheck = (val) => {
+
+// vérifie le champ nom
+const lastNameCheck = (val) => {
     lastName = undefined;
     if (val.length > 0 && (val.length < 2 || val.length > 25)) {
     displayError("lastName", "Le nom doit être compris entre 2 et 25 caractère");  
@@ -246,6 +282,7 @@ const firstNameCheck = (val) => {
   }
 }
 
+// vérifie le champ adresse
 const addressCheck = (val) => {
   address = undefined;
   if (!val.match(/^[a-zA-Zé èà0-9\s,.'-]{3,}$/)) {
@@ -256,6 +293,7 @@ const addressCheck = (val) => {
   }
 }
 
+// vérifie le champ ville
 const cityCheck = (val) => {
   city = undefined;
   if (!val.match(/^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/)) {
@@ -266,6 +304,7 @@ const cityCheck = (val) => {
   }
 }
 
+// vérifie le champ email
 const emailCheck = (val) => {
   email = undefined;
   if (!val.match(/^[\w_-]+@[\w-]+\.[a-z]{2,4}$/i)) {
@@ -275,6 +314,12 @@ const emailCheck = (val) => {
     email = val;
   }
 }
+
+
+/////////////
+/// EVENT ///
+/////////////
+
 
 inputFirstName.addEventListener("input", (e) => {
   firstNameCheck(e.target.value);
