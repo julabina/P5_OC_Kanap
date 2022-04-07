@@ -71,7 +71,7 @@ const verifyIsNotEmpty = () => {
     }
 }
 
-// verifie si l'article existe dans le panier
+// verifie si l'article existe deja dans le panier
 const verifyIsExist = () => {
     for (let i = 0; i < cart.length;i++) {
         if (cart[i].id === articles.id) {
@@ -92,6 +92,9 @@ const verifyIsExist = () => {
 // ajoute dans localStorage le contenu du panier
 const addToCart = () => {
     window.localStorage.setItem("localCart", JSON.stringify(cart));
+    productQuantityInput.value = 0;
+    productOption.value = "";
+    window.scrollTo(top);
 }
 
 // récupere du localStorage le contenu du panier
