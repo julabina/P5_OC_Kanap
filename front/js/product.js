@@ -17,8 +17,8 @@ articles = {};
 
 fetch('http://localhost:3000/api/products/' + productId)
 .then(res => res.json())
-.then(datas => {
-    productData = datas;
+.then(data => {
+    productData = data;
     displayProduct();
 })
 .catch(err => console.log(`Error with the message : ${err}`))

@@ -10,13 +10,13 @@ const submitBtn = document.getElementById("order");
 
 let cart = [],
 cartInfos = [],
-productsDatas= [],
+productsData= [],
 firstName, lastName,address, city, email;
 
 fetch('http://localhost:3000/api/products/')
 .then(res => res.json())
-.then(datas => {
-  productsDatas = datas;
+.then(data => {
+  productsData = data;
   getCartStorage();
 })
 .catch(err => console.log(`Error with the message : ${err}`))
@@ -31,12 +31,12 @@ const displayCart = () => {
   
   for (let i = 0; i < cart.length; i++) {
 
-    for (let a = 0; a < productsDatas.length; a++) {
-      if (cart[i].id === productsDatas[a]._id) {
-                productImageUrl = productsDatas[a].imageUrl;
-                productAltTxt = productsDatas[a].altTxt;
-                productName = productsDatas[a].name;
-                productPrice = productsDatas[a].price
+    for (let a = 0; a < productsData.length; a++) {
+      if (cart[i].id === productsData[a]._id) {
+                productImageUrl = productsData[a].imageUrl;
+                productAltTxt = productsData[a].altTxt;
+                productName = productsData[a].name;
+                productPrice = productsData[a].price
               }
             }
             
@@ -202,7 +202,7 @@ const postOrder = () => {
     email: email
   },
   productIDArr = [],
-  resDatas;
+  resData;
 
   for(let i = 0; i < cart.length; i++) {
     productIDArr.push(cart[i].id);
@@ -222,10 +222,10 @@ const postOrder = () => {
 
   fetch('http://localhost:3000/api/products/order', postOption)
   .then(res => res.json())
-  .then(datas => {
-    console.log(datas);
-    resDatas = datas.orderId;
-    toConfirmationPage(resDatas);
+  .then(data => {
+    console.log(data);
+    resData = data.orderId;
+    toConfirmationPage(resData);
   })
   
   resetCart();
