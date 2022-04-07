@@ -8,6 +8,7 @@ fetch("http://localhost:3000/api/products")
     productsDatas = datas;
     displayProduct();
 })
+.catch(err => console.log(`Error with the message : ${err}`))
 
 // affiche les produits
 const displayProduct = () => {

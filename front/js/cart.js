@@ -19,6 +19,7 @@ fetch('http://localhost:3000/api/products/')
   productsDatas = datas;
   getCartStorage();
 })
+.catch(err => console.log(`Error with the message : ${err}`))
 
 // affiche les élements du panier
 const displayCart = () => {
