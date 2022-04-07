@@ -162,8 +162,37 @@ const addListenner = () => {
 
 const postOrder = () => {
 
+  let contactContent = {
+    firstName : firstName,
+    lastName: lastName,
+    address: address,
+    city: city,
+    email: email
+  },
+  productIDArr = [];
+
+  for(let i = 0; i < cart.length; i++) {
+    productIDArr.push(cart[i].id);
+  }
+
+  let postOption = {
+    method: 'POST',
+    headers: new Headers({
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }),
+    body: JSON.stringify({
+      contact: contactContent,
+      products: productIDArr
+    })
+  }
+
+  fetch('http://localhost:3000/api/products/order', postOption)
+  .then(res => res.json())
+  .then(data => console.log(data))
+
   resetFormInputs();
-  /* resetCart(); */
+  resetCart();
 }
 
 const resetFormInputs = () => {
