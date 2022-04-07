@@ -175,21 +175,20 @@ const setCartStorage = () => {
 // ajoute des événements aux items créés 
 const addListenner = () => {
   
-  const qtyInputs = document.querySelectorAll(".itemQuantity");
-  const deleteButtons = document.querySelectorAll(".deleteItem");
+  const articles = document.querySelectorAll(".cart__item");
   
-  qtyInputs.forEach(input => {
-    input.addEventListener("input", (e) => {
-      changeQty(e.target.value, e.path[4].dataset.id, e.path[4].dataset.color);
+  articles.forEach(art => {
+    let inputs = art.children[1].children[1].children[0].children[1];
+    let btns = art.children[1].children[1].children[1].children[0];
+
+    inputs.addEventListener("input", (e) => {
+      changeQty(e.target.value, art.attributes[1].value, art.attributes[2].value);
+    })
+
+    btns.addEventListener("click", () => {
+      deleteArticle(art.attributes[1].value, art.attributes[2].value);
     })
   })
-
-  deleteButtons.forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      deleteArticle(e.path[4].dataset.id, e.path[4].dataset.color);
-    })
-  })
-
 }
 
 // envoie la commande au server back
