@@ -169,7 +169,8 @@ const postOrder = () => {
     city: city,
     email: email
   },
-  productIDArr = [];
+  productIDArr = [],
+  resDatas;
 
   for(let i = 0; i < cart.length; i++) {
     productIDArr.push(cart[i].id);
@@ -189,18 +190,20 @@ const postOrder = () => {
 
   fetch('http://localhost:3000/api/products/order', postOption)
   .then(res => res.json())
-  .then(data => console.log(data))
-
-  resetFormInputs();
+  .then(datas => {
+    console.log(datas);
+    resDatas = datas.orderId;
+    toConfirmationPage(resDatas);
+  })
+  
   resetCart();
+  
 }
 
-const resetFormInputs = () => {
-  inputFirstName.value = "";
-  inputLastName.value = "";
-  inputAddress.value = "";
-  inputCity.value = "";
-  inputEmail.value = "";  
+const toConfirmationPage = (id) => {
+  let url = "/html/confirmation.html?order=" + id;
+  
+  window.open(url,"_self");
 }
 
 const resetCart = () => {
@@ -297,5 +300,5 @@ submitBtn.addEventListener("click", (e) => {
   e.preventDefault();
   if (firstName && lastName && address && city && email) {
     postOrder();
-  }
+  } 
 })

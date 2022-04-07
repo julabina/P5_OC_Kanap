@@ -7,7 +7,7 @@ const productQuantityInput = document.getElementById("quantity");
 const addToCartBtn = document.getElementById("addToCart");
 
 const urlQuery = window.location.search;
-const productId = urlQuery.slice(4)
+const productId = urlQuery.slice(4);
 
 let productData,
 productQuantity = 0,
