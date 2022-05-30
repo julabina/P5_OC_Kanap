@@ -2,30 +2,53 @@ const itemsContainer = document.getElementById("items");
 
 let productsData;
 
-fetch("http://localhost:3000/api/products")
-.then(res => res.json())
-.then(data => {
+/** 
+ * récupère les données de l'API
+*/
+const init = () => {
+  fetch("http://localhost:3000/api/products")
+  .then(res => res.json())
+  .then(data => {
     productsData = data;
     displayProduct();
-})
-.catch(err => console.log(`Error with the message : ${err}`))
+  })
+  .catch(err => console.log(`Error with the message : ${err}`))
+}
 
-// affiche les produits
+init();
+
+/** 
+ * affiche les produits
+*/
 const displayProduct = () => {
 
-    let productList = '';
-
     for (let i = 0; i < productsData.length; i++) {
-        productList += `
-        <a href="./product.html?id=${productsData[i]._id}">
-        <article>
-          <img src="${productsData[i].imageUrl}" alt="${productsData[i].altTxt}, ${productsData[i].name}">
-          <h3 class="productName">${productsData[i].name}</h3>
-          <p class="productDescription">${productsData[i].description}</p>
-        </article>
-      </a>
-        `
-    }
+      const newProductLink = document.createElement('a');
+      newProductLink.href = "./product.html?id=" + productsData[i]._id;
 
-    itemsContainer.innerHTML = productList;
+      
+      const newProductImg = document.createElement('img');
+      newProductImg.src = productsData[i].imageUrl;
+      newProductImg.alt = productsData[i].altTxt + ", " + productsData[i].name
+      
+      const newProductH3 = document.createElement('h3');
+      newProductH3.setAttribute("class", "productName");
+      const newProductH3Content = document.createTextNode(productsData[i].name);
+      newProductH3.appendChild(newProductH3Content); 
+      
+      const newProductDesc = document.createElement('p');
+      newProductDesc.setAttribute("class", "productDescription");
+      const newProductDescContent = document.createTextNode(productsData[i].description);
+      newProductDesc.appendChild(newProductDescContent);
+      
+      const newProductArticle = document.createElement('article');
+      newProductArticle.appendChild(newProductImg);
+      newProductArticle.appendChild(newProductH3); 
+      newProductArticle.appendChild(newProductDesc);
+
+      newProductLink.appendChild(newProductArticle); 
+
+      itemsContainer.appendChild(newProductLink);
+
+    }
 }
