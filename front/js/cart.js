@@ -398,8 +398,8 @@ const lastNameCheck = (val) => {
 */
 const addressCheck = (val) => {
   address = undefined;
-  if (val.length > 0 && (val.length < 2 || val.length > 100)) {  
-    displayError("address", "L' adresse doit être compris entre 2 et 100 caractère");  
+  if (val.length > 0 && (val.length < 3 || val.length > 100)) {  
+    displayError("address", "L' adresse doit être compris entre 3 et 100 caractère");  
   } else if (!val.match(/^[a-zA-Zé èà0-9\s,.'-]{3,}$/)) {
     displayError("address", 'L\'adresse ne doit contenir que des lettres, nombres, ainsi que ",.\'-"'); 
   } else {

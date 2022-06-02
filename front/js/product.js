@@ -116,7 +116,7 @@ const verifyIsExist = () => {
  *  ouvre une fenetre de dialogue qui propose une redirection vers le panier
  */
 const toCartPage = () => {
-    if(confirm("Aller au panier !")) {
+    if(confirm("Souhaitez vous être rediridé vers la page panier ?")) {
         let url = "/html/cart.html";
         window.open(url,"_self");
     } else { 
